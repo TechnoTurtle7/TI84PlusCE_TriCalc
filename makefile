@@ -2,7 +2,7 @@
 # Makefile Options
 # ----------------------------
 
-NAME = TRICALC
+NAME = TRICALCB
 ICON = icon.png
 DESCRIPTION = "A Triangle Calculator"
 COMPRESSED = YES

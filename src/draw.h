@@ -1,6 +1,8 @@
 #pragma once
 
 #include <graphx.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define COL_WHITE 0
 #define COL_BLACK 1
@@ -24,14 +26,15 @@ void gfxInit() {
     gfx_SetTransparentColor(COL_WHITE);
     gfx_SetTextFGColor(COL_BLACK);
     gfx_SetColor(COL_BLACK);
+    gfx_SetTextConfig(gfx_text_clip);
 }
 void gfxEnd() {
     gfx_End();
 }
 
 void gfxDrawTri(Tri tri) {
-    const Vec2 windowSize = {GFX_LCD_WIDTH - 40, GFX_LCD_HEIGHT - 60};
-    const Vec2 windowPos = {20, 30};
+    const Vec2 windowSize = {GFX_LCD_WIDTH - 100, GFX_LCD_HEIGHT - 80};
+    const Vec2 windowPos = {90, 30};
     
     float scale = 30;
     if(tri.sA * scale > windowSize.y) scale = windowSize.y / tri.sA;
@@ -49,6 +52,42 @@ void gfxDrawTri(Tri tri) {
     gfx_Line_NoClip(p1.x, p1.y, p2.x, p2.y);
     gfx_Line_NoClip(p1.x, p1.y, p3.x, p3.y);
     gfx_Line_NoClip(p2.x, p2.y, p3.x, p3.y);
+    
+    gfx_SetTextFGColor(COL_BLACK);
+    const int maxChars = 8;
+    
+    char* buffer = malloc(maxChars + 3); //2 for variable, 1 for \0
+    memset(buffer, 0, maxChars + 3);
+    
+    char* num = malloc(maxChars + 1);
+    memset(num, 0, maxChars + 1);
+    
+    float2str(tri.sA, num);
+    strcpy(buffer, "a=");
+    strcat(buffer, num);
+    
+    uint width = gfx_GetStringWidth(buffer);
+    gfx_PrintStringXY(buffer, p1.x - width - 1, (p1.y + p2.y) / 2 - CHAR_HEIGHT / 2);
+    
+    memset(buffer, 0, maxChars + 3);
+    memset(num, 0, maxChars + 1);
+    float2str(tri.sB, num);
+    strcpy(buffer, "b=");
+    strcat(buffer, num);
+    
+    width = gfx_GetStringWidth(buffer);
+    gfx_PrintStringXY(buffer, (p1.x + p3.x) / 2 - width / 2, p1.y + CHAR_HEIGHT + 1);
+    
+    memset(buffer, 0, maxChars + 3);
+    memset(num, 0, maxChars + 1);
+    float2str(tri.sC, num);
+    strcpy(buffer, "c=");
+    strcat(buffer, num);
+    
+    gfx_PrintStringXY(buffer, (p1.x + p3.x) / 2 + 1, (p1.y + p2.y) / 2 - CHAR_HEIGHT - 1);
+    
+    free(num);
+    free(buffer);
     
     return;
 }

@@ -1,13 +1,25 @@
-#include <ti/screen.h>
-#include <ti/getcsc.h>
-
 #define VERSION "v1.0 BETA"
+#define BOOL unsigned int
+#define TRUE 1
+#define FALSE 0
+
+#include <keypadc.h>
+
+#include "draw.h"
 
 int main() {
-    os_ClrHome();
+    gfxInit();
     
-    os_PutStrFull("Hello, world!");
+    gfxGreet();
     
-    while(!os_GetCSC());
+    while(1) {
+        kb_Scan();
+        
+        if(kb_IsDown(kb_KeyDel)) break;
+        
+        if(needsRedraw) gfxRender();
+    }
+    
+    gfxEnd();
     return 0;
 }

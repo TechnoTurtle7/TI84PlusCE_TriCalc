@@ -7,7 +7,9 @@
 #define COL_GREEN 2
 #define COL_RED 3
 
-BOOL needsRedraw = TRUE;
+#define CHAR_HEIGHT 8
+
+bool needsRedraw = true;
 
 void gfxInit() {
     gfx_Begin();
@@ -22,20 +24,22 @@ void gfxInit() {
     gfx_SetTransparentColor(COL_WHITE);
     gfx_SetTextFGColor(COL_BLACK);
     gfx_SetColor(COL_BLACK);
-    
-    gfx_FillScreen(COL_WHITE);
 }
 void gfxEnd() {
     gfx_End();
 }
 void gfxRender() {
+    gfx_FillScreen(COL_WHITE);
+    
+    gfx_SetTextFGColor(COL_BLACK);
+    //version number
+    uint width = gfx_GetStringWidth(VERSION);
+    gfx_PrintStringXY(VERSION, GFX_LCD_WIDTH - width - 1, GFX_LCD_HEIGHT - CHAR_HEIGHT - 1);
+    
+    //controls
+    gfx_PrintStringXY("[del] - Exit", 1, GFX_LCD_HEIGHT - CHAR_HEIGHT - 1);
+    
     gfx_SwapDraw();
     
-    needsRedraw = FALSE;
-}
-
-void gfxGreet() {
-    gfx_SetTextFGColor(COL_GREEN);
-    
-    gfx_PrintStringXY("Hello, world!", 0, 0);
+    needsRedraw = false;
 }
